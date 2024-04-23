@@ -227,35 +227,15 @@ let run_test_aides_logement () =
     exit (-1)
   | Runtime.AssertionFailed _ -> ()
 
-let _test =
-  let () = run_test_aides_logement () in
-  let raw_events = Runtime.retrieve_log () in
-  Runtime.EventParser.parse_raw_events raw_events
-
-let _test =
-  let () = run_test_allocations_familiales () in
-  let raw_events = Runtime.retrieve_log () in
-  Runtime.EventParser.parse_raw_events raw_events
-
 let _bench =
   Random.init (int_of_float (Unix.time ()));
-  let num_iter = 10000 in
+  let num_iter = 1000 in
   let (_ : Benchmark.samples) =
     Benchmark.latency1 ~style:Auto ~name:"Allocations familiales"
       (Int64.of_int num_iter) run_test_allocations_familiales ()
   in
-  Printf.printf
-    "Successful\n\
-    \   computations: %d (%.2f%%)\n\
-    \ Total benefits awarded: %.2f€ (mean %.2f€)\n"
-    !num_successful
-    (Float.mul
-       (Float.div (float_of_int !num_successful) (float_of_int num_iter))
-       100.)
-    !total_amount
-    (Float.div !total_amount (float_of_int !num_successful));
   let (_ : Benchmark.samples) =
     Benchmark.latency1 ~style:Auto ~name:"Aides au logement"
       (Int64.of_int num_iter) run_test_aides_logement ()
   in
-  Printf.printf "Successful\n"
+  ()
