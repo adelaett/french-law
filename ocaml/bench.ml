@@ -240,7 +240,7 @@ let _bench =
   in
 
   let result: Yojson.Basic.t = `Assoc (ListLabels.map (Benchmark.merge s1 s2) ~f:(fun (n, samples) ->
-    (n, `List (List.map (fun t -> `String (Benchmark.to_string t)) samples) ))) in
+    (n, `List (List.map (fun t -> `Float ((Int64.to_float t.Benchmark.iters /. (t.Benchmark.utime +. t.Benchmark.stime)))) samples) ))) in
 
 
   Format.printf "%a\n" (Yojson.Basic.pretty_print ~std:true) result

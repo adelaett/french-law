@@ -37,10 +37,11 @@ for optim, avoid_exceptions in product(["yes", "no"], repeat=2):
     # Bien garder les deux lignes.
 
     # interprete catala.
-    # run(["make", "dependencies_python"], check=True,
-    #     env=env_base | {"OCAMLPATH": tmp_dir/"lib"})
-    # run(["make", "bench_python"], check=True,
-    #     env=env_base | {"OCAMLPATH": tmp_dir/"lib"})
+    run(["make", "dependencies-python"], check=True,
+        capture_output=True,
+        env=env_base | {"OCAMLPATH": tmp_dir/"lib"})
+    run(["make", "bench_python"], check=True,
+        env=env_base | {"OCAMLPATH": tmp_dir/"lib"})
 
     # Plutot le throughput.
 
