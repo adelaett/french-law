@@ -229,13 +229,18 @@ let run_test_aides_logement () =
 
 let _bench =
   Random.init (int_of_float (Unix.time ()));
-  let num_iter = 1000 in
-  let (_ : Benchmark.samples) =
-    Benchmark.latency1 ~style:Auto ~name:"Allocations familiales"
+  let num_iter = 10000 in
+  let (s1 : Benchmark.samples) =
+    Benchmark.latency1 ~style:Nil ~name:"Allocations familiales"
       (Int64.of_int num_iter) run_test_allocations_familiales ()
   in
-  let (_ : Benchmark.samples) =
-    Benchmark.latency1 ~style:Auto ~name:"Aides au logement"
+  let (s2 : Benchmark.samples) =
+    Benchmark.latency1 ~style:Nil ~name:"Aides au logement"
       (Int64.of_int num_iter) run_test_aides_logement ()
   in
-  ()
+
+  let result: Yojson.Basic.t = `Assoc (ListLabels.map (Benchmark.merge s1 s2) ~f:(fun (n, samples) ->
+    (n, `List (List.map (fun t -> `String (Benchmark.to_string t)) samples) ))) in
+
+
+  Format.printf "%a\n" (Yojson.Basic.pretty_print ~std:true) result
