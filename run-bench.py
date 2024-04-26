@@ -66,8 +66,9 @@ for optim, avoid_exceptions in product(["yes", "no"], repeat=2):
     # Bien garder les deux lignes.
 
     # interprete catala.
+    run(["rm", "_python_venv/french-law.stamp"])
     run(["make", "dependencies-python"], check=True,
-        capture_output=True,
+        # capture_output=True,
         env=env_base | {"OCAMLPATH": tmp_dir/"lib"})
     result_python = run(["make", "bench_python"], check=True,
                         capture_output=True,
