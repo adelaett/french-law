@@ -139,24 +139,28 @@ if __name__ == '__main__':
     args = parser.parse_args()
     action = args.action[0]
     if action == "bench_family":
+        import json
         iterations = 1000
 
-        print({
-            "Aides au logement": [
-                " 1.03 WALL ( 1.03 usr +  0.00 sys =  1.03 CPU) @ 9708.37/s (n=10000)"
-            ],
-            "Allocations familiales": [
-                " 0.22 WALL ( 0.22 usr +  0.00 sys =  0.22 CPU) @ 45221.24/s (n=10000)"
-            ]
-        })
-        print("Iterating {} iterations of the family benefits computation. Total time (s):".format(
-            iterations))
-        print(iterations/timeit.timeit(benchmark_iteration_family, number=iterations))
+        print("#{#",
+              json.dumps({
+                  'throughput': iterations/timeit.timeit(benchmark_iteration_family,
+                                                         number=iterations),
+                  "num_iter": iterations,
+                  'example': 'Allocations familiales'
+              }), "#}#")
+
     elif action == "bench_housing":
         iterations = 1000
-        print("Iterating {} iterations of the housing benefits computation. Total time (s):".format(
-            iterations))
-        print(iterations/timeit.timeit(benchmark_iteration_housing, number=iterations))
+        import json
+
+        print("#{#", json.dumps({
+            'throughput': iterations/timeit.timeit(benchmark_iteration_housing,
+              number=iterations),
+            "num_iter": iterations,
+            'example': 'Aides au logement'
+        }), "#}#")
+
     elif action == "show_log":
         log = run_with_log()
         indentation = 0

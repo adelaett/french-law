@@ -239,8 +239,18 @@ let _bench =
       (Int64.of_int num_iter) run_test_aides_logement ()
   in
 
-  let result: Yojson.Basic.t = `Assoc (ListLabels.map (Benchmark.merge s1 s2) ~f:(fun (n, samples) ->
-    (n, `List (List.map (fun t -> `Float ((Int64.to_float t.Benchmark.iters /. (t.Benchmark.utime +. t.Benchmark.stime)))) samples) ))) in
+  let result: Yojson.Basic.t = `List (
+    Benchmark.merge s1 s2
+    |> List.map (fun (n, ts) ->
+      List.map (fun t ->
+      `Assoc
+      [
+        "example", `String n;
+        "throughput", `Float (Int64.to_float t.Benchmark.iters /. (t.Benchmark.utime +. t.Benchmark.stime));
+        "num_iter", `Int (Int64.to_int t.Benchmark.iters)
+      ]) ts
+      )
+    |> List.flatten
+  ) in
 
-
-  Format.printf "%a\n" (Yojson.Basic.pretty_print ~std:true) result
+  Format.printf "#{#%a#}#\n" (Yojson.Basic.pretty_print ~std:true) result
